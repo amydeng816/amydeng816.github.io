@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <title>Find My Kid</title>
+
+    <!-- Bootstrap -->
+    <link rel="stylesheet" type="text/css" href="css/bootstrap.css">
+    <link rel="stylesheet" type="text/css" href="css/font-awesome.css">
+    <link rel="stylesheet" type="text/css" href="css/index.css">
+
+    <script type="text/javascript" src='https://cdn.firebase.com/js/client/1.0.11/firebase.js'></script>
+    <script type="text/javascript" src="js/parse-1.2.18.min.js"></script>
+    <script type="text/javascript" src="js/jquery.min.js"></script>
+    <script type="text/javascript" src="js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false"></script>
+    <script type="text/javascript" src="js/index.js"></script>
+    <script type="text/javascript" src="js/tracker.js"></script>
+
+</head>
+<body onload="initializeTracker()">
+  <nav class="navbar navbar-default navbar-inverse navbar-static-top" role="navigation">
+    <div class="container-fluid">
+      <a href="index.html"><span class="navbar-brand" style="font-size: x-large">&larr;</span></a>
+      <div class="pull-right">
+        <span class="navbar-brand2" style="text-decoration: none" id="user_id"></span>
+      </div>
+    </div>
+  </nav>
+
+  <div class="modal fade" id="loginModal" tabindex="-1" role="dialog" aria-labelledby="loginLabel" aria-hidden="true">
+    <div class="modal-dialog" id="login-modal">
+      <div class="modal-content" id="login-content">
+        <div class="modal-header" id="login-header">
+          <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+          <h1 class="modal-title text-center">Kid Tracker: <h2>1.) Log in to account<br/><br/>2.) Attach to kid</h2></h1>
+        </div>
+        <div class="modal-body">
+          <input type="text" placeholder="Username" id="username" autofocus="autofocus"/>
+          <input type="password" placeholder="Password" id="password"/>
+          <!-- <label id="login_error" style="display: none;"></label> -->
+          <div id="login_error"></div>
+          <button type="button" class="btn btn-login" onclick="loginTracker()">Login</button>
+
+          <h5 class="text-center"> <a href="#"> Forgot your password? </a>
+          <br/>
+      </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+  </div><!-- /.modal -->
+</div>
+  <div class="tracker-content">Tracking your kid's location
+  <br/><br/><span id="status">Loading...</span><br/><br/>
+<id="hint" style="font-style: italic; font-size: medium">For accuracy, please ensure the Wi-FI is disabled</id></div>
+
+</body>
+</html>

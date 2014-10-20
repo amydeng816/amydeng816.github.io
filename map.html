@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <title>Find My Kid | Map</title>
+
+    <!-- Bootstrap -->
+    <link rel="stylesheet" type="text/css" href="css/bootstrap.css">
+    <link rel="stylesheet" type="text/css"  href="css/font-awesome.css">
+    <link rel="stylesheet" type="text/css" href="css/index.css">
+    <link rel="stylesheet" type="text/css" href="css/iphone-style-checkbox.css">
+
+    <script type="text/javascript" src='https://cdn.firebase.com/js/client/1.0.11/firebase.js'></script>
+    <script type="text/javascript" src='js/parse-1.2.18.min.js'></script>
+    <script type="text/javascript" src="js/jquery.min.js"></script>
+    <script type="text/javascript" src="js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="js/iphone-style-checkbox.js"></script>
+    <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false&libraries=places"></script>
+    <script type="text/javascript" src="js/index.js"></script>
+    <script type="text/javascript" src="js/maps.js"></script>
+  
+  </head>
+  <body onload="loadUser('map');">
+    <nav class="navbar navbar-default navbar-inverse navbar-static-top" role="navigation">
+      <div class="container-fluid" id="nav-container">
+        <a href="index.html"><span class="navbar-brand" style="font-size: x-large">&larr;</span></a>
+        <div class="pull-right">
+          <ul class="nav navbar-nav" id="on-off-wrap">
+            <span class="pull-left navbar-brand2" style="text-decoration: none">Alerts: </span><li class="pull-left on-off" onclick="toggleON_OFF()"><input type="checkbox" id="on-off"/></li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+
+    <div id="map-canvas"></div>
+
+
+    <nav class="navbar navbar-default navbar-fixed-bottom navbar-inverse" role="navigation">
+      <div class="container-fluid">
+        <div class="row" id="settings-toggle">
+          <!-- figure out this up/down spacing -->
+          <p class="text-center"> <i class="fa fa-bars pull-left"> </i> Settings <i class="fa fa-bars pull-right"> </i> </p>
+        </div>
+        <div class="row text-center" id="settings-hide">
+          <button type="button" class="btn btn-default" data-toggle="modal" data-target="#baseLocationModal"> Change Kid's Address </button>
+          <br/>
+          <button type="button" class="btn btn-default" id="radiusBtn" data-toggle="modal" data-target="#radiusModal"> Change Radius </button>
+          <br/>
+          <button type="button" class="btn btn-default" id="phoneNumberBtn" data-toggle="modal" data-target="#phoneNumberModal"> Change Phone Number </button> 
+          <!--<button type="button" class="btn btn-default" id="followDeviceBtn" data-toggle="modal" data-target="#followDeviceModal"> Follow My Device Mode </button>
+          <button type="button" class="btn btn-default" id="unfollowDeviceBtn" data-toggle="modal" style="display: none" onclick="UnfollowDevice()"> Stop Following My Device </button>-->
+          <br/>      
+        </div>
+    </nav>
+    <div class="modal fade" id="baseLocationModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+      <div class="modal-dialog settings-modal">
+        <div class="modal-content settings-content">
+          <div class="modal-header settings-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+            <h4 class="modal-title">Change Kid's Address</h4>
+          </div>
+          <div class="modal-body settings-body">
+            <p>Dog's Expected Location</p>
+            <input type="text" class='controls' id="pac-input" style="width: 100%;" placeholder='Ex. 2060 Ridge Ave.'/>
+          </div>
+          <div class="modal-body settings-error">
+          	<label id="baselocation_error" style="display: none; color: red"></label>
+          </div>
+          <div class="modal-footer settings-footer">
+            <button type="button" class="btn btn-primary" onclick="updateBaseLocation();" style="width: 100%;">Save changes</button>
+			<button type="button" class="btn btn-primary" onclick="setBaseAsCurrentLocation();" style="width: 100%; margin-left: 0px;">Set As Current Location </button>
+          </div>
+        </div><!-- /.modal-content -->
+      </div><!-- /.modal-dialog -->
+    </div><!-- /.modal -->
+    <div class="modal fade" id="radiusModal" tabindex="-1" role="dialog" aria-labelledby="radiusLabel" aria-hidden="true">
+      <div class="modal-dialog settings-modal">
+        <div class="modal-content settings-content">
+          <div class="modal-header settings-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+            <h4 class="modal-title">Change Radius</h4>
+          </div>
+          <div class="modal-body settings-body">
+            <p>Radius (feet)</p>
+            <input type="text" class="controls controls-text" id="new_radius" />
+          </div>
+          <div class="modal-body settings-error">
+          	<label id="radius_error" style="display: none; color: red;"></label>
+          </div>
+          <div class="modal-footer settings-footer">
+            <button type="button" class="btn btn-primary" onclick="updateRadius();">Save Changes</button>
+          </div>
+        </div><!-- /.modal-content -->
+      </div><!-- /.modal-dialog -->
+    </div><!-- /.modal -->
+    <div class="modal fade" id="phoneNumberModal" tabindex="-1" role="dialog" aria-labelledby="phoneNumberLabel" aria-hidden="true">
+      <div class="modal-dialog settings-modal">
+        <div class="modal-content settings-content">
+          <div class="modal-header settings-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+            <h4 class="modal-title">Change Phone Number</h4>
+          </div>
+          <div class="modal-body settings-body">
+            <p>Phone Number</p>
+            <input type="text" class="controls controls-text" id="new_phonenumber" />
+          </div>
+          <div class="modal-body settings-error">
+          	<label id="phonenumber_error" style="display: none; color: red"></label>
+          </div>
+          <div class="modal-footer settings-footer">
+            <button type="button" class="btn btn-primary" onclick="updatePhoneNumber(null);"> Save Changes</button>
+          </div>
+        </div><!-- /.modal-content -->
+      </div><!-- /.modal-dialog -->
+    </div><!-- /.modal -->
+  <!-- 
+  Pop up box for "Follow my device" mode
+-->
+    <div class="modal fade" id="followDeviceModal" tabindex="-1" role="dialog" aria-labelledby="followDeviceLabel" aria-hidden="true">
+      <div class="modal-dialog settings-modal">
+        <div class="modal-content settings-content">
+          <div class="modal-header settings-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+            <h4 class="modal-title" id="FollowDevice">Follow My Device</h4>
+          </div>
+          <div class="modal-body settings-body">
+            <p>Personal Radius (feet)</p>
+            <input type="text" class="controls controls-text" id="new_person_radius" />
+          </div>
+          <div class="modal-body settings-error">
+            <label id="personal_radius_error" style="display: none; color: red;"></label>
+          </div>
+          <div class="modal-footer settings-footer">
+            <button type="button" class="btn btn-primary" onclick="FollowDevice()"> Save Changes</button>
+          </div>
+        </div><!-- /.modal-content -->
+      </div><!-- /.modal-dialog -->
+    </div><!-- /.modal -->
+    <!-- 
+  Pop up box to verify phone numbers with Twilio.
+-->
+    <div class="modal fade" id="validation" tabindex="-1" role="dialog" aria-labelledby="validationLabel" aria-hidden="true">
+      <div class="modal-dialog settings-modal">
+        <div class="modal-content settings-content">
+          <div class="modal-header settings-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+            <h4 class="modal-title" id="ValidatePhone">Verify Phone Number</h4>
+          </div>
+          <div class="modal-body settings-body">
+            <p>Use this Validation Code when you receive the call!</p>
+            <label id="validation_number"></label>
+          </div>
+          <div class="modal-footer settings-footer">
+            <button type="button" class="btn btn-primary" onclick="hideModal('#validation'); showModal('#phoneNumberModal');">Try Again</button>
+            <button type="button" class="btn btn-primary" data-dismiss="modal">Finished</button>
+          </div>
+        </div><!-- /.modal-content -->
+      </div><!-- /.modal-dialog -->
+    </div><!-- /.modal -->
+  </body>
+</html>

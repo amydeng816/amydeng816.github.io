@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html>
+	<head>
+	<meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <title>Find My Kid | Report</title>
+	<link rel="stylesheet" type="text/css" href="css/bootstrap.css">
+	<link rel="stylesheet" type="text/css" href="css/report.css">
+	<link rel="stylesheet" href="https://code.jquery.com/ui/1.10.4/themes/smoothness/jquery-ui.css">
+    <script type="text/javascript" src='https://cdn.firebase.com/js/client/1.0.11/firebase.js'></script>
+    <script type="text/javascript" src="js/parse-1.2.18.min.js"></script>
+    <script type="text/javascript" src="js/jquery.min.js"></script>
+	<script type="text/javascript" src="https://code.jquery.com/ui/1.10.4/jquery-ui.js"></script>
+    <script type="text/javascript" src="js/bootstrap.min.js"></script>
+	<script type="text/javascript" src="js/html2canvas.js"></script>
+    <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?v=3.exp&libraries=geometry&sensor=false"></script>
+    <script type="text/javascript" src="js/report.js"></script>
+	
+  </head>
+
+	<body>
+	 <nav class="navbar navbar-default navbar-inverse navbar-fixed-top" role="navigation">
+      <div class="container-fluid" id="nav-container">
+        <a href="index.html"><span class="navbar-brand" style="font-size: x-large">&larr;</span></a>
+        <div class="pull-right">
+          <ul class="nav navbar-nav">
+            <button type="button" class="btn btn-default" data-toggle="modal" data-target="#emailModal" style="margin-top: 8px;"> Email A Report </button>
+          </ul>
+        </div>
+      </div>
+    </nav>
+
+	<div class="container-fluid" id="stats">
+		<h1 id="title" style="width: 100%; text-align: center;"></h1>
+		  <div id="changeTimeDiv" class='text-center'>
+			<button type="button" class="btn btn-default" data-toggle="modal" data-target="#timeSpanModal"> Change Time Span </button>
+		  </div>
+      <div class="row">
+        <div class="main text-center" style="width: 100%;">
+          <div class="row stats" style="clear: both; margin-top: 10px; width: 100%;">
+            <div id="centered">
+				<div class="quick-stat">
+					<div class="stat-circle blue">
+						<h2 class="circle-text" id="distance"> </h2>
+					</div>
+					<h4>Total Distance</h4>
+				  <span class="text-muted">Miles</span>
+				</div>
+				<div class="quick-stat">
+				  <div class="stat-circle cyan">
+					<h2 class="circle-text" id="speed"> </h2>
+				  </div>
+				  <h4>Average Speed</h4>
+				  <span class="text-muted">Miles/Hour</span>
+				</div>
+			</div>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+      	<div class="col-sm-9 col-sm-offset-1 col-md-10 col-md-offset-1 main">
+			<h4> Route Taken </h4>
+      		<div id="activity-map">
+      		</div>
+      	</div>
+      </div>
+      <div class="row">
+      	<div class="selector">
+	        <ul class="nav nav-pills">
+			    <li class="disabled" id="todaybtn" onclick="getTodayReport()" ><a href="#">Today</a></li>
+			    <li id="yesterdaybtn" onclick="getYesterdayReport()" ><a href="#">Yesterday</a></li>
+			</ul>
+		</div>
+	  </div>
+	<div class="modal fade" id="timeSpanModal" tabindex="-1" role="dialog" aria-labelledby="timeSpanLabel" aria-hidden="true">
+      <div class="modal-dialog timespan-modal">
+        <div class="modal-content timespan-content">
+          <div class="modal-header timespan-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+            <h4 class="modal-title">Time Span</h4>
+          </div>
+          <div class="modal-body timespan-body">
+            <p>From: </p>
+            <input class="message-box" type="text" id="from" readonly>
+            <p>To: </p>
+            <input class="message-box" type="text" id="to" readonly>
+          </div>
+          <div class="modal-body timespan-error">
+          	<label id="timespan_error" style="color: red; display: none;"></label>
+          </div>
+          <div class="modal-footer timespan-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">Back</button>
+            <button type="button" class="btn btn-primary" onclick="changeTimeSpan();">Submit</button>
+          </div>
+        </div><!-- /.modal-content -->
+      </div><!-- /.modal-dialog -->
+    </div><!-- /.modal -->
+	<div class="modal fade" id="emailModal" tabindex="-1" role="dialog" aria-labelledby="emailLabel" aria-hidden="true">
+      <div class="modal-dialog email-modal">
+        <div class="modal-content email-content">
+          <div class="modal-header email-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+            <h4 class="modal-title">Email Report</h4>
+          </div>
+          <div class="modal-body email-body">
+            <p>To: </p>
+            <input class="message-box" type="text" id="email_address" style="width: 100%;">
+            <br><br>
+			<p>Comments: </p>
+			<textarea id="email_body" rows="5" style="width: 100%"></textarea>
+          </div>
+          <div class="modal-body email-error">
+          	<label id="email_error" style="color: red; display: none;"></label>
+          </div>
+          <div class="modal-footer email-footer">
+            <button type="button" class="btn btn-primary" onclick="sendEmailReport();" style="width: 100%">Send Report</button>
+          </div>
+        </div><!-- /.modal-content -->
+      </div><!-- /.modal-dialog -->
+    </div><!-- /.modal -->
+    </div>
+	</body>
+</html>
